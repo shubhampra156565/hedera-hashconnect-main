@@ -16,7 +16,7 @@ console.log(hashconnect);
 
 console.log('hash connect is imported ');
 
-let initData = await hashconnect.init(appMetadata,'testnet',false);
+let initData = await hashconnect.init(appMetadata,'testnet',true);
 // 
 let privatekey = initData.privkey;
 

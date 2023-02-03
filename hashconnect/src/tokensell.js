@@ -1,5 +1,5 @@
 import { HashConnect } from "hashconnect";
-const  { TokenCreateTransaction, Client, TokenType, TokenInfoQuery, Hbar, PublicKey, TransferTransaction, AccountCreateTransaction, AccountBalanceQuery, PrivateKey, Wallet,AccountId } = require ( "@hashgraph/sdk");
+// const  { TokenCreateTransaction, Client, TokenType, TokenInfoQuery, Hbar, PublicKey, TransferTransaction, AccountCreateTransaction, AccountBalanceQuery, PrivateKey, Wallet,AccountId } = require ( "@hashgraph/sdk");
 
 
 // const { Buffer } = require("node:buffer");
@@ -34,5 +34,7 @@ export const tokensell = async ()=>{
 
     let response = await hashconnect.sendTransaction(topic, signedTnxasArr);
     console.log(response)
+    
+
     
 };

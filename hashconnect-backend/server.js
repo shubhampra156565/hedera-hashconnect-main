@@ -34,7 +34,15 @@ app.post('/sell',(req,res)=>{
     res.send({tnx});
 });
 
+app.post('/tnx',(req,res)=>{
+    const data = req.body ;
+    console.log('tnx is going in or out not ideas');
+})
 
 app.listen(8080,()=>{
     console.log(`listenig to the port 8080`)
 });
+
+
+
+

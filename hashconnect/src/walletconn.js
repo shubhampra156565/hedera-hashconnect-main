@@ -2,7 +2,7 @@ import { HashConnect } from "hashconnect";
 // import {fetch} from 'node-fetch';
 // import { recieveAuth } from "../../hashconnect-backend/auth";
 // import {fetch} from "fetch-node";
-let hashconnect = new HashConnect();
+let hashconnect = new HashConnect(true);
 
 
 let appMetaData = {
@@ -11,7 +11,7 @@ let appMetaData = {
     icon: "ddddsdsssdsdsdsd.com"
 }
 export const pairHashpack = async () => {
-    let initData = await hashconnect.init(appMetaData, 'testnet', false)  
+    let initData = await hashconnect.init(appMetaData, 'testnet', true);
     hashconnect.foundExtensionEvent.once((walletMetaData) => {
         hashconnect.connectToLocalWallet(initData.pairingString, walletMetaData);
     })
@@ -48,7 +48,7 @@ export let authenticateUser = async () => {
     const serverSignAsBuffer = Buffer.from(serverSigasArr);
 
     const hashconnectSaveData = JSON.parse(window.localStorage.hashconnectData);
-    console.log(hashconnectSaveData);
+
 
     // let hashconnect1 = new HashConnect(appMetaData,'testnet',false);
     // let initData = await hashconnect1.init(appMetaData, 'testnet', false) 
