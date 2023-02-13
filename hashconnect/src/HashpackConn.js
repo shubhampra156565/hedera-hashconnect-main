@@ -1,10 +1,11 @@
 import { HashConnect } from "hashconnect";
 import {TransferTransaction,AccountId} from '@hashgraph/sdk';
+// import {SimpleCrypto} from "simple-crypto-js";
 
 // import { tnxbytes } from "./tnxtobytes";
 // import { recieveAuth } from "../../hashconnect-backend/auth";
 // import {fetch} from "fetch-node";
-let hashconnect = new HashConnect(true);
+let hashconnect = new HashConnect();
 
 let appMetaData = {
     name: "dpa-fintech",
@@ -12,7 +13,9 @@ let appMetaData = {
     icon: "ddddsdsssdsdsdsd.com"
 }
 export const pairHashpack = async () => {
-    let initData = await hashconnect.init(appMetaData, 'testnet', false)
+    let initData = await hashconnect.init(appMetaData, 'testnet', false);
+
+
     hashconnect.foundExtensionEvent.once((walletMetaData) => {
         hashconnect.connectToLocalWallet(initData.pairingString, walletMetaData);
     })
@@ -21,6 +24,7 @@ export const pairHashpack = async () => {
         console.log('wallet-paired');
         //gives u meta data have account ids and pairing data
         // console.log(`this is the paring data-------${pairingData}`);
+        console.log(pairingData);
 
         hashconnect.acknowledgeMessageEvent.once((acknowledgeData) => {
             //do something with acknowledge response data
@@ -28,13 +32,13 @@ export const pairHashpack = async () => {
             console.log(acknowledgeData);
         })
     })
-
+    console.log('akoeleged- iske badd retutning the out')
     console.log(initData);
     return initData
 }
 
-export let authenticateUser = async () => {
-    const paylaod = {
+export const authenticateUser = async () => {
+    const payload = {
         url: window.location.hostname,
         data: {
             token: "skfhsdkfhksdfhsdkfhksdfhskfhsfkfkdh"
@@ -46,33 +50,36 @@ export let authenticateUser = async () => {
 
     const res = await fetch('http://localhost:8080/authenticate');
     const { signingData } = await res.json();
-    console.log({ signingData });
+
     const serverSigasArr = Object.values(signingData.serverSignature);
     const serverSignAsBuffer = Buffer.from(serverSigasArr);
 
-    const auth = await hashconnect.authenticate(
+    let auth = await hashconnect.authenticate(
         hashconnectSaveData.topic,
-        hashconnectSaveData.pairingData[0].accountIDS[0],
+        hashconnectSaveData.pairingData[0].accountIds[0],
         signingData.serverSigningAccount,
         serverSignAsBuffer,
-        paylaod);
+        payload);
 
     const recieveAuthData = {
-        singingAccount: hashconnectSaveData.pairingData[0].accountIDS[0],
+        singingAccount: hashconnectSaveData.pairingData[0].accountIds[0],
         auth
     }
 
-    const res2 = fetch('/recieveAuth',{
-        method:"POST",
-        mode:"cors",
-        headers:{ 
-            'content-type':'application/json'
+    const res2 = await fetch('http://localhost:8080/recieveAuth', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify(recieveAuthData)
-    });
-    const msg = await res2.json();
+        body: JSON.stringify(recieveAuthData),
+    })
 
-    console.log(msg );
+    const {authMessage} = await res2.json()
+    console.log('recived auth message')
+    const log = JSON.stringify(authMessage);
+    console.log(log);
+
 }
 
 export const singtnx = async(tnxbytes) =>{
@@ -85,7 +92,7 @@ export const singtnx = async(tnxbytes) =>{
 
     const singingAccount = hashconnectSaveData.pairingData[0].accountIDS[0];
     
-    let response =await  hashconnect.sign(initdata.topic,new AccountId(singingAccount),tnx);
+    let {response} =await  hashconnect.sign(initdata.topic,new AccountId(singingAccount),tnx);
     
     // if (response.success){
     //     return{ status:response.success.,
@@ -112,8 +119,18 @@ export const singTnxBytesHashpackSide = async(transactionBytes) =>{
           const ekey = hashconnectSaveData.encryptionKey;
           console.log(topic1);
           console.log(accountid);
-          console.log(ekey);
+          console.log('my e key is this one '+ekey);
+          
 
+        //   // Create a new SimpleCrypto instance with a secret key
+        //   const simpleCrypto = new SimpleCrypto(ekey);
+          
+        //   // The message you want to encrypt
+        //   const message = transactionBytes
+          
+        //   // Encrypt the message
+        //   const encryptedMessage = simpleCrypto.encrypt(message);
+          
     const transaction = {
         topic: topic1,
         byteArray: transactionBytes,
@@ -123,8 +140,11 @@ export const singTnxBytesHashpackSide = async(transactionBytes) =>{
             hideNft: false
         }
     }
-    let response = await hashconnect.sendTransaction(topic1, transaction);
-    return {status :response.success };
+    const {response} = await hashconnect.sendTransaction(topic1, transaction);
+
+    console.log(response)
+    // return {status :response.success };
+    return('singed response is recived back')
 }
 
 

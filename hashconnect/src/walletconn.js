@@ -11,24 +11,19 @@ let appMetaData = {
     icon: "ddddsdsssdsdsdsd.com"
 }
 export const pairHashpack = async () => {
-    let initData = await hashconnect.init(appMetaData, 'testnet', true);
-    hashconnect.foundExtensionEvent.once((walletMetaData) => {
-        hashconnect.connectToLocalWallet(initData.pairingString, walletMetaData);
+    let initData = await hashconnect.init(appMetaData, "testnet", false);
+
+    hashconnect.foundExtensionEvent.once((walletMetadata) => {
+        hashconnect.connectToLocalWallet(initData.pairingString, walletMetadata);
     })
 
     hashconnect.pairingEvent.once((pairingData) => {
-        console.log('wallet-paired');
-        //gives u meta data have account ids and pairing data
-        // console.log(`this is the paring data-------${pairingData}`);
+        console.log('wallet paired')
+        console.log(pairingData)
 
-        hashconnect.acknowledgeMessageEvent.once((acknowledgeData) => {
-            //do something with acknowledge response data
-            console.log('listening to the akknledeged data')
-            console.log(acknowledgeData);
-        })
+        console.log(pairingData.accountIds[0]);
     })
 
-    // console.log(initData);
     return initData
 }
 
@@ -47,15 +42,23 @@ export let authenticateUser = async () => {
     const serverSigasArr = Object.values(signingData.serverSignature);
     const serverSignAsBuffer = Buffer.from(serverSigasArr);
 
-    const hashconnectSaveData = JSON.parse(window.localStorage.hashconnectData);
-
+    const r = window.localStorage.hashconnectData;
+    const hashconnectSaveData = JSON.parse(r);
+    console.log(hashconnectSaveData);
+    console.log(hashconnectSaveData.topic)
+    console.log(hashconnectSaveData.pairingData[0]);
+    // const c = hashconnectSaveData.pairingData[0];
+    const accountid = hashconnectSaveData.pairingData[0].accountIds[0]
+    const topic = hashconnectSaveData.pairingData[0].topic
+    console.log(topic);
+    console.log(accountid);
 
     // let hashconnect1 = new HashConnect(appMetaData,'testnet',false);
     // let initData = await hashconnect1.init(appMetaData, 'testnet', false) 
 
     let auth = await hashconnect.authenticate(
-        hashconnectSaveData.topic,
-        hashconnectSaveData.pairingData[0].accountIDS[0],
+        JSON.stringify(topic),
+        JSON.stringify(accountid),
         signingData.serverSigningAccount,
         serverSignAsBuffer,
         paylaod);

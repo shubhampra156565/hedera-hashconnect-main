@@ -2,7 +2,7 @@ const  { PrivateKey,TransferTransaction, TransactionId,AccountId}=require("@hash
 const bodyparser = require('body-parser');
 
  const tokentransfer= async(token,amount,acc)=>{
-    const client_id = "0.0.48777805"
+    const client_id = "0.0.636440"
     const transectionId =await TransactionId.generate(client_id);
     const tx =await new TransferTransaction().addTokenTransfer(token, acc,-amount)
         .addTokenTransfer(token, client_id, amount)
@@ -18,8 +18,6 @@ const bodyparser = require('body-parser');
     return bytes
     
 }
-
-
 const  fiatSettle=(amount)=>{
     console.log('deducted')
 }

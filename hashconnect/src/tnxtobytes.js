@@ -20,7 +20,7 @@ export const tnxObj = (userAccount,accDPA) => {
 
     return tnx;
 }
-export const tnxbytes = (userAccount,accDPA) => {
+export const tnxbytes = async(userAccount,accDPA) => {
 
     const tnxId = TransactionId.generate(AccountId.fromString(userAccount));
 

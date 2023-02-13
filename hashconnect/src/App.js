@@ -1,8 +1,9 @@
 
 import './App.css';
 import pairing from './pairing';
-import { pairHashpack } from './walletconn';
-import { authenticateUser } from './walletconn';
+import { pairHashpack,authenticateUser } from './HashpackConn';
+// import { pairHashpack } from './walletconn';
+// import { authenticateUser } from './walletconn';
 import { tokensell } from './tokensell';
 // import { singtnx } from './HashpackConn';
 import { tnxbytes } from './tnxtobytes';
@@ -12,8 +13,10 @@ import sendTrasaction from './signtnx';
 // import { Key } from '@hashgraph/sdk';
 // import { TransferTransaction } from '@hashgraph/sdk';
 // import { AccountId } from '@hashgraph/sdk';
-
+// import {Wallet} from "./Components/wallet"
 // let hashconnect = new HashConnect();
+import App1 from './Components/jaycools';
+import AssociatebyUserPaidbyDPA from './Components/tokneAss';
 
 function App() {
   return (
@@ -31,8 +34,8 @@ function App() {
           connect to hashpack
         </a>
 
-
-
+      {/* <Wallet/> */}
+    
         <button onClick={() => {
           pairing();
 
@@ -41,8 +44,7 @@ function App() {
 
 
         <button onClick={() => {
-          const initData1 = pairHashpack();
-          console.log(initData1)
+           pairHashpack();
         }}>
           pair hashpack
         </button>
@@ -82,7 +84,7 @@ function App() {
           console.log(accountid);
           console.log(ekey);
 
-          const bytes = tnxbytes(accountid,'0.0.653440');
+          const bytes =await tnxbytes(accountid,'0.0.653441');
           const status =await singTnxBytesHashpackSide(bytes);
           if (status){
           console.log(`sing tnx is completed`)};
@@ -97,7 +99,7 @@ function App() {
           console.log(hashconnectSaveData.pairingData[0]);
           // const c = hashconnectSaveData.pairingData[0];
           const accountid = hashconnectSaveData.pairingData[0].accountIds[0]
-          const topic = hashconnectSaveData.pairingData[0].topic
+          const topic = JSON.stringify (hashconnectSaveData.pairingData[0].topic)
           console.log(topic);
           console.log(accountid);
         }}>
@@ -106,9 +108,9 @@ function App() {
         <button onClick={() => {
         }}>consleing the hahsconnect data</button>
 
-        <hi> 
+        <h1> 
           the second type of transections beings from here 
-        </hi>
+        </h1>
         <button onClick={async ()=>
         {
           const r = window.localStorage.hashconnectData;
@@ -123,16 +125,27 @@ function App() {
           console.log(topic);
           console.log(accountid);
           console.log(ekey);
-           
-          const res = await sendTrasaction(topic,accountid,ekey);
+          const res = await sendTrasaction(topic,accountid);
           console.log(res);
           
         }
-        }>clicke to dend h bar to google from your acc 
-
+        }>clicke to send 1 h bar to google from your acc
+        
         </button>
+        <button onClick={()=>{
+          localStorage.clear();
+          console.log('local storage clear')
+        }}>claer local storage </button>
+        <p> here is the code for associating a token - fees paid by Dpa for this user has to sing the transection</p>
+        <AssociatebyUserPaidbyDPA/>
+        <App1/>
+
       </header>
     </div>
+    
+
   );
 }
 export default App;
+
+

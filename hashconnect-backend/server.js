@@ -4,7 +4,7 @@ const cors = require('cors');
 require('dotenv').config();
 const fetch = require("node-fetch");
 const {tokentransfer} = require("./tokentransger");
-
+const {Associatetoken,executetokenAss} = require('./tokneAsstobytes');
 
 const {sendAuth, recieveAuth} =require('./auth.js');
 // const port = process.env.port;
@@ -30,8 +30,28 @@ app.post('/recieveAuth',(req,res)=>{
 app.post('/sell',(req,res)=>{
     const data  = req.body;
     const{token,amount,acc}=data 
-     const tnx =tokentransfer(token,amount,acc);
+     const tnx = tokentransfer(token,amount,acc);
     res.send({tnx});
+});
+
+
+
+// this is for get the trasection 
+app.post('/associate',(req,res)=>{
+    const data = req.body;
+    const {token,account} = data 
+    const bytes = Associatetoken(token,account);
+    res.send(bytes);
+    //calling the token creating trasection which retunrn the transecton bytes ;
+})
+
+
+// for exectue associate tnx at server side
+app.post('/executeAssociate',(req,res)=>{
+    const data = req.body ;
+    const {bytes,sign,acc} = data ;
+    const status = executetokenAss(bytes,sign,acc);
+    res.send(status);
 });
 
 app.post('/tnx',(req,res)=>{
@@ -42,7 +62,6 @@ app.post('/tnx',(req,res)=>{
 app.listen(8080,()=>{
     console.log(`listenig to the port 8080`)
 });
-
 
 
 
